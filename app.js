@@ -349,7 +349,7 @@ function quoteMiniForm(prefill){
 
 /* ============ ГЛАВНАЯ ============ */
 function pageHome(){
-  const popular = ['ploskie-poliefirnye','voshchenye-hlopkovye','kruglye-poliefirnye','kruglye-ruchki','ruchki-s-metallicheskimi-fiksatorami','vityj-poliefirnyj','narezka-atlasnyh-lent','ploskie-dvuhtsvetnye'].map(productBySlug);
+  const popular = ['ploskie-poliefirnye','voshchenye-hlopkovye','kruglye-ruchki','vityj-poliefirnyj'].map(productBySlug);
   return `
   <section class="hero">
     <div class="container">
@@ -381,8 +381,9 @@ function pageHome(){
   <section class="section">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Каталог</span><h2>Что нужно изготовить?</h2><p>Четыре направления производства. Выберите категорию — она подставится в форму расчёта.</p></div>
-      <div class="grid grid-4">
-        ${CATS.map(c => `<article class="card">
+      <div class="grid grid-4 home-categories">
+        ${CATS.map((c, i) => `<article class="card category-card">
+          <span class="category-index">0${i + 1}</span>
           ${phBlock(c.name, false)}
           <h3>${c.name}</h3>
           <p>${c.short}.</p>
@@ -399,8 +400,9 @@ function pageHome(){
   <section class="section gray">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Подбор по задаче</span><h2>Подберём изделие под вашу задачу</h2><p>Отраслевые страницы с готовыми товарными решениями — без лишней переписки.</p></div>
-      <div class="grid grid-4">
-        ${SOLUTIONS.map(s => `<a class="card" href="#/solutions/${s.slug}/">
+      <div class="grid grid-4 home-solutions">
+        ${SOLUTIONS.map((s, i) => `<a class="card solution-card" href="#/solutions/${s.slug}/">
+          <span class="solution-index">${String(i + 1).padStart(2, '0')}</span>
           <h3 style="margin-top:0">${s.name}</h3>
           <p>${s.text}</p>
           <span style="color:var(--green-deep);font-weight:600;font-size:14px;margin-top:14px">Смотреть решения →</span>
@@ -411,7 +413,7 @@ function pageHome(){
 
   <section class="section">
     <div class="container">
-      <div class="two-col">
+      <div class="two-col quick-quote-layout">
         <div class="section-head" style="margin-bottom:0">
           <span class="eyebrow">Быстрый расчёт</span>
           <h2>Начните с трёх полей</h2>

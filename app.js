@@ -169,6 +169,16 @@ function phSVG(label, dark){
   </svg>`;
 }
 function phBlock(label, dark){ return `<div class="card-img ${dark ? 'ph-weave' : 'ph-light'}">${phSVG(label, dark)}<span class="ph-label">Заменить фото: ${esc(label)}</span></div>`; }
+const CATEGORY_IMAGES = {
+  'shnurki': './assets/images/category-shoelaces.jpg',
+  'shnury': './assets/images/category-cords.jpg',
+  'ruchki-dlya-upakovki': './assets/images/category-packaging.jpg',
+  'rezinki-i-narezka': './assets/images/category-elastic.jpg'
+};
+function productImage(cat, alt, eager){
+  const src = CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.shnury;
+  return `<img src="${src}" alt="${esc(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+}
 
 /* ============ ШАПКА / ФУТЕР ============ */
 function logoSVG(){ return `<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#18482A"/><path d="M6 12 Q 12 7 17 12 T 28 12" stroke="#48B96A" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M6 19 Q 12 14 17 19 T 28 19" stroke="#DDF3E3" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M6 26 Q 12 21 17 26 T 28 26" stroke="#48B96A" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`; }
@@ -287,7 +297,7 @@ function renderFooter(){
 /* ============ ОБЩИЕ КОМПОНЕНТЫ ============ */
 function productCard(p, listView){
   return `<article class="p-card">
-    <a class="card-img" href="#/product/${p.slugFull}/" aria-label="${esc(p.name)}">${phSVG(p.name, false)}<span class="ph-label">Фото: ${esc(p.name)}</span></a>
+    <a class="card-img" href="#/product/${p.slugFull}/" aria-label="${esc(p.name)}">${productImage(p.cat, p.name)}</a>
     <div class="p-body">
       <span class="p-status">${p.status}</span>
       <h3><a href="#/product/${p.slugFull}/">${esc(p.name)}</a></h3>
@@ -364,8 +374,7 @@ function pageHome(){
         </div>
       </div>
       <div class="hero-visual">
-        ${phSVG('производство — плетение шнура', true)}
-        <span class="ph-label">Заменить: видео/фото производства (плетение, станок, катушки)</span>
+        <img src="./assets/images/hero-production.jpg" alt="Производство плетёных шнуров на оборудовании" fetchpriority="high" decoding="async">
       </div>
     </div>
     <div class="trust-strip">
@@ -384,7 +393,7 @@ function pageHome(){
       <div class="grid grid-4 home-categories">
         ${CATS.map((c, i) => `<article class="card category-card">
           <span class="category-index">0${i + 1}</span>
-          ${phBlock(c.name, false)}
+          <div class="card-img">${productImage(c.slug, c.name, true)}</div>
           <h3>${c.name}</h3>
           <p>${c.short}.</p>
           <div class="tags">${MATERIALS.slice(0,4).map(m => `<span class="tag">${m}</span>`).join('')}</div>
@@ -397,7 +406,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="section gray">
+  <section class="section gray home-optional">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Подбор по задаче</span><h2>Подберём изделие под вашу задачу</h2><p>Отраслевые страницы с готовыми товарными решениями — без лишней переписки.</p></div>
       <div class="grid grid-4 home-solutions">
@@ -429,7 +438,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="section gray tight">
+  <section class="section gray tight home-optional">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Популярные решения</span><h2>Запрашиваемые позиции каталога</h2><p>Цены не публикуются: стоимость каждой партии рассчитывается по параметрам.</p></div>
       <div class="grid grid-4 p-list">${popular.map(p => productCard(p)).join('')}</div>
@@ -466,7 +475,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="section gray tight">
+  <section class="section gray tight home-optional">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Возможности</span><h2>Что учитываем при изготовлении партии</h2></div>
       <div class="chips">
@@ -485,7 +494,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="section">
+  <section class="section home-optional">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Контроль качества</span><h2>Контролируем параметры согласованной партии</h2><p>Не обещаем «0% брака» — согласовываем параметры и порядок контроля до запуска производства и сверяем партию с утверждённым образцом.</p></div>
       <div class="grid grid-3">
@@ -495,7 +504,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="section gray tight">
+  <section class="section gray tight home-optional">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Портфолио</span><h2>Выполненные изделия</h2><p>Публикуем только подтверждённые работы. Параметры позиций без исходных данных скрыты — не выдумываем.</p></div>
       <div class="grid grid-3">${WORKS.map(w => workCard(w)).join('')}</div>
@@ -503,7 +512,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="section tight">
+  <section class="section tight home-optional">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Доставка и оплата</span><h2>Условия без мелкого шрифта</h2></div>
       <div class="grid grid-3">
@@ -538,7 +547,7 @@ function pageHome(){
 
 function workCard(w){
   return `<article class="card work-card">
-    ${phBlock(w.title, false)}
+    <div class="card-img">${productImage(w.cat, w.title)}</div>
     <h3>${esc(w.title)}</h3>
     <div class="w-params">
       ${Object.entries(w.params).map(([k, v]) => `<div><span>${esc(k)}:</span><b>${esc(v)}</b></div>`).join('')}

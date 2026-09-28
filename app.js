@@ -27,7 +27,7 @@ const CATS = [
 
 const MATERIALS = ['хлопок', 'полиэфир', 'полипропилен', 'нейлон', 'метанит'];
 
-function P(slug, cat, name, o){ return Object.assign({slug, cat, name, status:'По запросу', slugFull: cat + '/' + slug}, o); }
+function P(slug, cat, name, o){ return Object.assign({slug, cat, name, slugFull: cat + '/' + slug}, o); }
 
 const PRODUCTS = [
   /* --- Шнурки --- */
@@ -133,6 +133,18 @@ const WORKS = [
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function preventHeadingOrphans(root = document) {
+  const shortWords = /(^|[\s(«„"])(а|и|но|в|во|к|ко|с|со|у|о|об|обо|от|до|по|за|на|над|под|при|про|для|без|из|изо)\s+(?=\S)/giu;
+  root.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    textNodes.forEach(node => {
+      node.nodeValue = node.nodeValue.replace(shortWords, '$1$2\u00A0');
+    });
+  });
+}
 const catBySlug = s => CATS.find(c => c.slug === s);
 const productBySlug = s => PRODUCTS.find(p => p.slugFull === s || p.slug === s);
 const money = v => v;
@@ -187,26 +199,25 @@ function renderHeader(){
   $('#header-root').innerHTML = `
   <div class="topbar">
     <div class="container">
-      <span>Собственное производство в Зеленограде</span>
-      <span class="tb-sep">•</span>
-      <a href="tel:${SITE.phoneMainHref}" data-track="click_phone">${SITE.phoneMain}</a>
-      <span class="tb-sep">•</span>
-      <a href="mailto:${SITE.email}" data-track="click_email">${SITE.email}</a>
-      <span style="margin-left:auto"></span>
-      <a href="#/repeat-order/">Повторить заказ</a>
+      <div class="topbar-info">
+        <span>Собственное производство в Зеленограде</span>
+        <span class="tb-sep">•</span>
+        <a href="tel:${SITE.phoneMainHref}" data-track="click_phone">${SITE.phoneMain}</a>
+        <span class="tb-sep">•</span>
+        <a href="mailto:${SITE.email}" data-track="click_email">${SITE.email}</a>
+      </div>
+      <div class="topbar-actions">
+        <a href="#/repeat-order/">Повторить заказ</a>
+        <a class="quote-chip" href="#/raschet-zakaza/" title="Список для расчёта">Список расчёта <span class="cnt">${Quote.count()}</span></a>
+        <a class="btn btn-accent btn-sm" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
+      </div>
     </div>
   </div>
   <header class="site-header" id="site-header">
     <div class="container header-main">
       <a class="logo" href="#/">${logoSVG()}<span>Шнурка<span class="logo-tld">.ру</span></span></a>
       <nav class="main-nav" aria-label="Основное меню">
-        <div class="mega-wrap">
-          <a href="#/catalog/" aria-haspopup="true">Каталог ▾</a>
-          <div class="mega" role="menu">
-            ${CATS.map(c => `<div><h4><a href="#/catalog/${c.slug}/">${c.name}</a></h4>${PRODUCTS.filter(p => p.cat === c.slug).slice(0, 4).map(p => `<a href="#/product/${p.slugFull}/">${esc(p.name)}</a>`).join('')}</div>`).join('')}
-            <a class="mega-all" href="#/catalog/">Весь каталог →</a>
-          </div>
-        </div>
+        <a href="#/catalog/">Каталог</a>
         <a href="#/solutions/">Решения</a>
         <a href="#/production/">Производство</a>
         <a href="#/cvetovye-karty/">Цветовые карты</a>
@@ -216,8 +227,6 @@ function renderHeader(){
         <a href="#/contacts/">Контакты</a>
       </nav>
       <div class="header-actions">
-        <a class="quote-chip" href="#/raschet-zakaza/" title="Список для расчёта">Список расчёта <span class="cnt">${Quote.count()}</span></a>
-        <a class="btn btn-accent btn-sm" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
         <a class="icon-btn nav-toggle" href="#" data-action="nav-toggle" aria-label="Открыть меню">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </a>
@@ -228,7 +237,6 @@ function renderHeader(){
     <button class="icon-btn mm-close" data-action="nav-close" aria-label="Закрыть меню"><svg width="26" height="26" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div style="height:56px"></div>
     <a href="#/catalog/">Каталог</a>
-    ${CATS.map(c => `<div class="mm-sub"><a href="#/catalog/${c.slug}/">— ${c.name}</a></div>`).join('')}
     <a href="#/solutions/">Решения</a>
     <a href="#/cvetovye-karty/">Цветовые карты</a>
     <a href="#/proizvodstvo-na-zakaz/">Индивидуальное изготовление</a>
@@ -254,9 +262,9 @@ function renderFooter(){
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a class="logo" href="#/" style="margin-bottom:16px">${logoSVG()}<span>Шнурка<span class="logo-tld">.ру</span></span></a>
+          <a class="logo footer-logo" href="#/">${logoSVG()}<span>Шнурка<span class="logo-tld">.ру</span></span></a>
           <p style="font-size:14px;max-width:300px;margin:14px 0 18px">Производство шнурков, шнуров и ручек для упаковки. Собственное производство в Зеленограде, опыт более ${SITE.experienceYears.replace('+','')} лет.</p>
-          <a class="btn btn-ghost btn-sm" href="#/repeat-order/">Повторить заказ</a>
+          <a class="btn btn-ghost btn-sm footer-repeat" href="#/repeat-order/">Повторить заказ</a>
         </div>
         <div>
           <h5>Каталог</h5>
@@ -299,7 +307,6 @@ function productCard(p, listView){
   return `<article class="p-card">
     <a class="card-img" href="#/product/${p.slugFull}/" aria-label="${esc(p.name)}">${productImage(p.cat, p.name)}</a>
     <div class="p-body">
-      <span class="p-status">${p.status}</span>
       <h3><a href="#/product/${p.slugFull}/">${esc(p.name)}</a></h3>
       <div class="p-meta">${esc(p.material)} · ${esc(p.form)}</div>
       <p class="p-purpose">${esc(p.purpose)}</p>
@@ -365,7 +372,7 @@ function pageHome(){
     <div class="container">
       <div>
         <span class="eyebrow">Прямой производитель · Зеленоград</span>
-        <h1>Производим шнуры, шнурки и ручки для упаковки <span class="hl">под ваш тираж</span></h1>
+        <h1><span class="hero-title-line">Производим</span><span class="hero-title-line">шнуры, шнурки</span><span class="hero-title-line">ручки для упаковки</span><span class="hero-title-line hl">под ваш тираж</span></h1>
         <p class="lead">Подберём материал, форму, плетение, размер, цвет, длину и наконечник. Собственное производство в Зеленограде, поставки по России, Казахстану, Беларуси и Армении.</p>
         <div class="hero-cta">
           <a class="btn btn-accent" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт партии</a>
@@ -603,9 +610,6 @@ function pageCatalog(catSlug){
         <div class="f-group"><h4>Форма</h4>
           ${['круглый','плоский','витой'].map(f => `<label class="f-check"><input type="checkbox" data-filter="forms" value="${f}">${f[0].toUpperCase() + f.slice(1)}</label>`).join('')}
         </div>
-        <div class="f-group"><h4>Наличие</h4>
-          <p class="small muted">Статусы «в наличии» и «под заказ» включаются в CMS после подтверждения складских данных.</p>
-        </div>
         <button class="btn btn-outline btn-sm" data-action="clear-filters" style="width:100%">Сбросить фильтры</button>
       </aside>
       <div>
@@ -660,8 +664,7 @@ function pageProduct(slugFull){
     ['Диаметр / ширина', null], ['Длина', null],
     ['Минимальная сумма заказа', SITE.minOrder],
     ['Минимальный тираж', null],
-    ['Типовой срок', null],
-    ['Наличие', p.status]
+    ['Типовой срок', null]
   ].filter(r => r && r[1]);
   const charsHidden = ['Диаметр / ширина', 'Длина', 'Минимальный тираж', 'Типовой срок'];
   const related = PRODUCTS.filter(x => x.cat === p.cat && x.slug !== p.slug).slice(0, 4);
@@ -680,7 +683,6 @@ function pageProduct(slugFull){
         </div>
       </div>
       <div>
-        <span class="p-status">${p.status}</span>
         <p style="margin-bottom:20px">${esc(p.purpose)}. Параметры изготовления подбираются под задачу и согласовываются до запуска партии.</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px">
           <button class="btn btn-accent" data-action="add-quote" data-slug="${p.slugFull}" data-track="product_added_to_quote">Добавить в расчёт</button>
@@ -1277,6 +1279,7 @@ function router(){
   renderSelectedColors();
   renderQuoteChip();
   if (after) after();
+  preventHeadingOrphans(app);
   $$('.main-nav a').forEach(a => {
     const href = a.getAttribute('href') || '';
     a.classList.toggle('active', href === '#/' + r + '/' || (r === '' && href === '#/'));
@@ -1287,6 +1290,8 @@ function router(){
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-action],[data-track],a[href^="tel:"],a[href^="mailto:"]');
   if (t && t.dataset.track) track(t.dataset.track, { el: t.textContent.trim().slice(0, 60) });
+  const mobileMenuLink = e.target.closest('#mobile-menu a');
+  if (mobileMenuLink) $('#mobile-menu').classList.remove('open');
   const el = e.target.closest('[data-action]');
   if (!el) return;
   const a = el.dataset.action;

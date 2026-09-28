@@ -493,7 +493,7 @@ function pageHome(){
 
   <section class="section dark">
     <div class="container">
-      <div class="section-head"><span class="eyebrow">Процесс</span><h2>Как проходит заказ: 7 этапов</h2><p>Прозрачная схема: что делает производство, что нужно от вас и какой результат вы получаете на каждом шаге.</p></div>
+      <div class="section-head"><span class="eyebrow">Процесс</span><h2>Как проходит заказ: <span class="mobile-title-line">7 этапов</span></h2><p>Прозрачная схема: что делает производство, что нужно от вас и какой результат вы получаете на каждом шаге.</p></div>
       <div class="steps">
         ${PROCESS.map(s => `<div class="step"><b>${s.t}</b><span>${s.d}</span><div class="who">${s.who}</div></div>`).join('')}
       </div>

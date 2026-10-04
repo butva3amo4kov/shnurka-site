@@ -988,7 +988,7 @@ function wField(label, name, type, opts, required, ph){
   if (type === 'textarea') return `<div class="field full"><label>${label}</label><textarea name="${name}" rows="3" placeholder="${ph || ''}">${esc(val)}</textarea></div>`;
   return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><input name="${name}" type="${type}" value="${esc(val)}" placeholder="${ph || ''}" ${required ? 'data-wreq' : ''}><span class="err-msg">Заполните поле</span></div>`;
 }
-function wizardStepHTML(){
+function renderWizard(){
   const d = wizard.data, s = wizard.step;
   const selected = d.items || [];
   let inner = '';

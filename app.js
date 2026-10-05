@@ -109,7 +109,6 @@ const PRODUCTS = [
     material:'полипропилен',form:'витой',twist:'витое',purpose:'подарочная упаковка',
     description:'Витые ручки изготовлены из прочного полипропилена, обеспечивающего надёжность и долговечность. Металлический фиксатор позволяет удобно и безопасно закрепить ручку на упаковке, придавая ей завершённый вид. Разнообразие цветов и дизайнов помогает подобрать вариант под конкретное оформление подарка.'
   }),
-  P('polipropilen-vitye-plastik-4-5','ruchki-dlya-upakovki','Ручки для подарочной упаковки из полипропилена витые с пластиковым фиксатором, 4–5 мм',{material:'полипропилен',form:'витой',twist:'витое',purpose:'подарочная упаковка'}),
   P('polipropilen-vitye','ruchki-dlya-upakovki','Ручки для подарочной упаковки из полипропилена витые',{
     material:'полипропилен',form:'витой',twist:'витое',purpose:'подарочная упаковка',
     description:'Витой полипропиленовый шнур с наконечниками, готовый к установке в пакет. Пакет с витой ручкой выглядит дороже и служит дольше пакета с вырубной ручкой: шнур не рвёт бумагу под нагрузкой и не режет ладонь.'
@@ -167,7 +166,6 @@ const PRODUCTS = [
     material:'атласная лента',form:'плоский',twist:'—',purpose:'нарезка',
     description:'Горячая нарезка атласных лент предназначена для отделки текстильных изделий, аксессуаров и декорирования. Атласные ленты широко применяются в различных видах рукоделия, при упаковке подарков и производстве сувениров, в рекламных акциях, брендировании продукции и изготовлении ручек для пакетов.'
   }),
-  P('goryachaya-narezka-shnura','rezinki-i-narezka','Горячая нарезка шнура, кроме хлопкового',{material:'полиэфир, полипропилен',form:'круглый, плоский',twist:'—',purpose:'нарезка'})
 ];
 
 /* Служебная палитра оттенков для формы запроса */
@@ -522,7 +520,7 @@ function quoteMiniForm(prefill){
     </div>
     <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off">
     <div class="field full" style="flex-direction:row;gap:14px;align-items:center;flex-wrap:wrap">
-      <button class="btn btn-accent" type="submit" data-track="quote_step_started">Продолжить расчёт</button>
+      <button class="btn btn-accent" type="submit" data-track="quote_step_started">Отправить</button>
       <span class="muted small">Нет готового ТЗ? Прикрепите фотографию, эскиз или пример изделия в <a href="#/raschet-zakaza/" style="text-decoration:underline">подробной форме</a> — поможем сформировать спецификацию.</span>
     </div>
     <div class="form-ok full" style="grid-column:1/-1"></div>
@@ -583,9 +581,6 @@ function pageHome(){
       <span class="eyebrow">Расчёт стоимости</span>
       <h2>Заполните форму, и мы рассчитаем ваш заказ</h2>
       <p>Ответьте на несколько вопросов о продукции, параметрах и объёме. Если чего-то не знаете — пропустите или выберите помощь специалиста.</p>
-      <div class="quiz-cover-meta">
-        <span>6 вопросов</span><span>Можно пропускать неизвестные параметры</span><span>Без оплаты на сайте</span>
-      </div>
       <button class="btn btn-accent quiz-start" data-action="wizard-start" data-mode="help" data-track="quote_step_started">Начать подбор</button>
     </div>
   </section>
@@ -934,14 +929,6 @@ function pageQuote(){
     <div class="two-col" style="grid-template-columns:1.25fr .75fr">
       <div>
         <div class="card" style="padding:30px">
-          <h2 style="font-size:22px;margin-bottom:6px">Новая позиция</h2>
-          <p class="muted small" style="margin-bottom:20px">Знаете параметры — укажите сами. Нет — ответьте на простые вопросы о задаче, поможем с подбором.</p>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
-            <button class="btn btn-accent" data-action="wizard-start" data-mode="known" data-track="quote_step_started">Знаю нужные параметры</button>
-            <button class="btn btn-outline" data-action="wizard-start" data-mode="help" data-track="quote_step_started">Нужна помощь с подбором</button>
-          </div>
-          <hr style="border:none;border-top:1px solid var(--border);margin:22px 0">
-          <h3 style="font-size:17px;margin-bottom:14px">Или быстрая заявка</h3>
           ${quoteMiniForm('')}
         </div>
       </div>
@@ -994,19 +981,19 @@ function renderWizard(){
   let inner = '';
   if (s === 0){
     const products = [['shnury','Шнуры'],['shnurki','Шнурки для обуви'],['ruchki-dlya-upakovki','Ручки для подарочной упаковки'],['other','Другое: резинка, нарезка или другая продукция'],['help','Пока не знаю — нужна консультация']];
-    inner = `<h2>Выберите необходимую продукцию</h2><p class="muted" style="margin-bottom:24px">Можно отметить несколько вариантов.</p><div class="grid grid-2 quiz-options">${products.map(o => `<label class="card quiz-option ${selected.includes(o[0])?'selected':''}"><input type="checkbox" data-witem="${o[0]}" ${selected.includes(o[0])?'checked':''}><b>${o[1]}</b></label>`).join('')}</div>`;
+    inner = `<h2>Выберите необходимую продукцию</h2><p class="muted" style="margin-bottom:24px">Можно отметить несколько вариантов.</p><div class="quiz-check-list">${products.map(o => `<label><input type="checkbox" data-witem="${o[0]}" ${selected.includes(o[0])?'checked':''}><span>${o[1]}</span></label>`).join('')}</div>`;
   } else if (s === 1){
     inner = `<h2>Для какой задачи или какого изделия?</h2><div class="form-grid quiz-single-field">${wField('Расскажите, где будет использоваться продукция', 'taskOther', 'textarea', null, true, 'Например: ручки для подарочных пакетов или шнур для худи')}</div>`;
   } else if (s === 2){
     const materials = [['хлопок','Хлопок'],['полиэфир','Полиэфир'],['полипропилен','Полипропилен'],['other','Другой материал'],['help','Не знаю — помогите подобрать']];
-    inner = `<h2>Какой материал нужен?</h2><p class="muted" style="margin-bottom:24px">Можно отметить несколько вариантов.</p><div class="grid grid-3 quiz-options">${materials.map(o => `<label class="card quiz-option ${(d.materials||[]).includes(o[0])?'selected':''}"><span class="quiz-photo-slot">Фото материала</span><input type="checkbox" data-wmaterial="${o[0]}" ${(d.materials||[]).includes(o[0])?'checked':''}><b>${o[1]}</b></label>`).join('')}</div><div class="form-grid" style="margin-top:18px">${wField('Комментарий к материалу', 'materialOther', 'text', null, false, 'Укажите другой материал или требования')}</div>`;
+    inner = `<h2>Какой материал нужен?</h2><p class="muted" style="margin-bottom:24px">Можно отметить несколько вариантов.</p><div class="quiz-check-list">${materials.map(o => `<label><input type="checkbox" data-wmaterial="${o[0]}" ${(d.materials||[]).includes(o[0])?'checked':''}><span>${o[1]}</span></label>`).join('')}</div><div class="form-grid" style="margin-top:24px">${wField('Комментарий к материалу', 'materialOther', 'text', null, false, 'Укажите другой материал или требования')}</div>`;
   } else if (s === 3){
     const cord = selected.includes('shnury') || selected.includes('other');
     const lace = selected.includes('shnurki');
     const handle = selected.includes('ruchki-dlya-upakovki');
-    inner = `<h2>Какие размеры нужны?</h2><p class="muted" style="margin-bottom:24px">Можно указать примерные размеры или прикрепить фото/образец. Если не знаете — пропустите.</p><div class="form-grid">${cord?wField('Диаметр шнура, мм','diameter','text',null,false,'например, 5 мм'):''}${cord?wField('Профиль шнура','profile','select',[['round','Круглый'],['flat','Плоский']]):''}${lace?wField('Ширина шнурка, мм','width','text',null,false,'например, 10 мм'):''}${lace?wField('Толщина, мм','thickness','text',null,false,'если известна'):''}${handle?wField('Длина или размеры ручки','handleSize','text',null,false,'если применимо'):''}${wField('Комментарий к размерам','sizeComment','textarea',null,false,'Другие параметры')}</div>${fileFieldHTML('Прикрепить фото или образец')}`;
+    inner = `<h2>Какие размеры нужны?</h2><p class="muted" style="margin-bottom:24px">Укажите длину и ширину. Если точные размеры пока неизвестны — пропустите этот шаг.</p><div class="form-grid">${cord?wField('Диаметр шнура, мм','diameter','text',null,false,'например, 5 мм'):''}${cord?wField('Профиль шнура','profile','select',[['round','Круглый'],['flat','Плоский']]):''}${lace?wField('Ширина шнурка, мм','width','text',null,false,'например, 10 мм'):''}${lace?wField('Толщина, мм','thickness','text',null,false,'если известна'):''}${handle?wField('Длина и ширина ручки','handleSize','text',null,false,'если применимо'):''}${wField('Комментарий к размерам','sizeComment','textarea',null,false,'Длина, ширина и другие параметры')}</div>`;
   } else if (s === 4){
-    inner = `<h2>Какой цвет нужен?</h2><p class="muted" style="margin-bottom:24px">Укажите желаемый цвет, точный код из цветовой карты или загрузите пример — мы подберём цвет.</p><div class="form-grid quiz-single-field">${wField('Цвет или код карты','color','textarea',null,false,'Например: тёмно-зелёный или код поставщика')}</div><div class="color-map-slots">${['Карта шнуров','Карта шнурков','Карта лент','Дополнительная карта'].map((t,i)=>`<button type="button" class="color-map-slot" disabled><span>Изображение ${i+1}</span><b>${t}</b><small>будет добавлено</small></button>`).join('')}</div><div class="quiz-checks"><label><input type="checkbox" data-wcolorflag="sample" ${(d.colorFlags||[]).includes('sample')?'checked':''}> Нужен подбор по образцу</label><label><input type="checkbox" data-wcolorflag="unknown" ${(d.colorFlags||[]).includes('unknown')?'checked':''}> Цвет пока не выбран</label></div>${fileFieldHTML('Прикрепить фото или файл')}`;
+    inner = `<h2>Какой цвет нужен?</h2><p class="muted" style="margin-bottom:24px">Посмотрите все доступные карты, затем укажите цвет или его код.</p><div class="wizard-color-maps color-map-slider"><button type="button" class="color-map-arrow prev" data-action="wizard-color-map-slide" data-dir="-1" aria-label="Предыдущая цветовая карта">←</button><div class="color-map-slider-viewport" id="wizard-color-map-slider-viewport"><div class="color-map-slider-track">${HOME_COLOR_MAPS.map(map=>`<article class="color-map-card"><div class="color-map-image"><img src="${map.src}" alt="${map.title}, ${map.sheet}" loading="lazy"></div><h3>${map.title}</h3><p>${map.sheet}</p></article>`).join('')}</div></div><button type="button" class="color-map-arrow next" data-action="wizard-color-map-slide" data-dir="1" aria-label="Следующая цветовая карта">→</button></div><div class="form-grid quiz-single-field wizard-color-field">${wField('Цвет или код карты','color','textarea',null,false,'Например: тёмно-зелёный или код поставщика')}</div><div class="quiz-checks"><label><input type="checkbox" data-wcolorflag="sample" ${(d.colorFlags||[]).includes('sample')?'checked':''}> Нужен подбор по образцу</label><label><input type="checkbox" data-wcolorflag="unknown" ${(d.colorFlags||[]).includes('unknown')?'checked':''}> Цвет пока не выбран</label></div>`;
   } else if (s === 5){
     const volumes=['до 500','500–1 000','1 000–5 000','более 5 000'];
     inner = `<h2>Какой объём планируете заказать?</h2><p class="muted" style="margin-bottom:24px">Если объём пока примерный, укажите ориентир.</p><div class="grid grid-2 quiz-options">${volumes.map(v=>`<button class="card quiz-option ${d.volume===v?'selected':''}" data-wpick="volume" data-val="${v}"><b>${v}</b></button>`).join('')}</div>${wField('Комментарий к объёму','volumeComment','text',null,false,'Можно указать единицы: шт., пары или метры')}`;
@@ -1441,6 +1428,11 @@ document.addEventListener('click', e => {
   }
   else if (a === 'color-map-slide') {
     const viewport = $('#color-map-slider-viewport');
+    const card = viewport && viewport.querySelector('.color-map-card');
+    if (viewport && card) viewport.scrollBy({ left: Number(el.dataset.dir) * (card.getBoundingClientRect().width + 18), behavior: 'smooth' });
+  }
+  else if (a === 'wizard-color-map-slide') {
+    const viewport = $('#wizard-color-map-slider-viewport');
     const card = viewport && viewport.querySelector('.color-map-card');
     if (viewport && card) viewport.scrollBy({ left: Number(el.dataset.dir) * (card.getBoundingClientRect().width + 18), behavior: 'smooth' });
   }

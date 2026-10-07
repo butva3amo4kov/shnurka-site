@@ -245,6 +245,14 @@ const ARTICLES = [
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PRIMARY_SITE_PAGES = {
+  about: 'https://shnurka.ru/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8.html',
+  delivery: 'https://shnurka.ru/%D0%B4%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0-%D0%B8-%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0.html',
+  contacts: 'https://shnurka.ru/contacts.html'
+};
+function primarySiteUrl(page, content){
+  return `${PRIMARY_SITE_PAGES[page]}?utm_source=shnurka_site&utm_medium=referral&utm_campaign=github_site&utm_content=${encodeURIComponent(content)}`;
+}
 
 function preventHeadingOrphans(root = document) {
   const shortWords = /(^|[\s(«„"])(а|и|но|в|во|к|ко|с|со|у|о|об|обо|от|до|по|за|на|над|под|при|про|для|без|из|изо)\s+(?=\S)/giu;
@@ -349,7 +357,6 @@ function renderHeader(){
         <a href="mailto:${SITE.email}" data-track="click_email">${SITE.email}</a>
       </div>
       <div class="topbar-actions">
-        <a href="#/repeat-order/">Повторить заказ</a>
         <a class="quote-chip" href="#/raschet-zakaza/" title="Список для расчёта">Список расчёта <span class="cnt">${Quote.count()}</span></a>
         <a class="btn btn-accent btn-sm" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
       </div>
@@ -361,9 +368,9 @@ function renderHeader(){
       <nav class="main-nav" aria-label="Основное меню">
         <a href="#/catalog/">Каталог</a>
         <a href="#/cvetovye-karty/">Цветовые карты</a>
-        <a href="#/delivery-payment/">Доставка и оплата</a>
-        <a href="#/about/">О компании</a>
-        <a href="#/contacts/">Контакты</a>
+        <a href="${primarySiteUrl('delivery','header_delivery')}">Доставка и оплата</a>
+        <a href="${primarySiteUrl('about','header_about')}">О компании</a>
+        <a href="${primarySiteUrl('contacts','header_contacts')}">Контакты</a>
       </nav>
       <div class="header-actions">
         <a class="icon-btn nav-toggle" href="#" data-action="nav-toggle" aria-label="Открыть меню">
@@ -380,11 +387,10 @@ function renderHeader(){
     <a href="#/proizvodstvo-na-zakaz/">Индивидуальное изготовление</a>
     <a href="#/quality/">Качество и документы</a>
     <a href="#/obrazcy/">Запросить образцы</a>
-    <a href="#/repeat-order/">Повторить заказ</a>
-    <a href="#/delivery-payment/">Доставка и оплата</a>
+    <a href="${primarySiteUrl('delivery','mobile_menu_delivery')}">Доставка и оплата</a>
     <a href="#/articles/">Статьи</a>
-    <a href="#/about/">О компании</a>
-    <a href="#/contacts/">Контакты</a>
+    <a href="${primarySiteUrl('about','mobile_menu_about')}">О компании</a>
+    <a href="${primarySiteUrl('contacts','mobile_menu_contacts')}">Контакты</a>
     <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
       <a class="btn btn-accent" href="#/raschet-zakaza/">Получить расчёт партии</a>
       <a class="btn btn-ghost" href="tel:${SITE.phoneMainHref}">${SITE.phoneMain}</a>
@@ -400,7 +406,7 @@ function renderFooter(){
         <div>
           <a class="logo footer-logo" href="#/" aria-label="Шнурка.ру — на главную">${logoMark()}<span>Шнурка<span class="logo-tld">.ру</span></span></a>
           <p style="font-size:14px;max-width:300px;margin:14px 0 18px">Производство шнурков, шнуров и ручек для упаковки. Собственное производство в Зеленограде, опыт более ${SITE.experienceYears.replace('+','')} лет.</p>
-          <a class="btn btn-ghost btn-sm footer-repeat" href="#/repeat-order/">Повторить заказ</a>
+          <a class="btn btn-ghost btn-sm footer-repeat" href="#/" data-action="scroll-quiz" data-track="open_quote">Расчёт заказа</a>
         </div>
         <div>
           <h5>Каталог</h5>
@@ -409,10 +415,10 @@ function renderFooter(){
         </div>
         <div>
           <h5>Компания</h5>
-          <a href="#/quality/">Качество и документы</a>
           <a href="#/cvetovye-karty/">Цветовые карты</a>
-          <a href="#/articles/">Статьи</a>
-          <a href="#/about/">О компании</a>
+          <a href="https://shnurka.ru/news/">Статьи</a>
+          <a href="${primarySiteUrl('delivery','footer_delivery')}">Доставка и оплата</a>
+          <a href="${primarySiteUrl('about','footer_about')}">О компании</a>
         </div>
         <div>
           <h5>Контакты</h5>
@@ -428,7 +434,6 @@ function renderFooter(){
         <span style="display:flex;gap:18px;flex-wrap:wrap">
           <a href="#/privacy/">Политика конфиденциальности</a>
           <a href="#/personal-data-consent/">Согласие на обработку данных</a>
-          <a href="#/delivery-payment/">Доставка и оплата</a>
         </span>
       </div>
     </div>
@@ -538,7 +543,7 @@ function pageHome(){
         <h1><span class="hero-title-line">Производим</span><span class="hero-title-line">шнуры, шнурки</span><span class="hero-title-line">ручки для упаковки</span><span class="hero-title-line hl">под ваш тираж</span></h1>
         <p class="lead">Подберём материал, форму, плетение, размер, цвет, длину и наконечник. Собственное производство в Зеленограде, поставки по России, Казахстану, Беларуси и Армении.</p>
         <div class="hero-cta">
-          <a class="btn btn-accent" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт партии</a>
+          <a class="btn btn-accent" href="#quiz" data-action="scroll-quiz" data-track="open_quote">Получить расчёт партии</a>
           <a class="btn btn-ghost" href="#/obrazcy/" data-track="sample_request">Запросить образцы</a>
         </div>
       </div>
@@ -576,7 +581,7 @@ function pageHome(){
     </div>
   </section>
 
-  <section class="quiz-cover">
+  <section class="quiz-cover" id="quiz">
     <div class="container quiz-cover-inner">
       <span class="eyebrow">Расчёт стоимости</span>
       <h2>Заполните форму, и мы рассчитаем ваш заказ</h2>
@@ -605,16 +610,13 @@ function pageHome(){
         </div>
         <button class="custom-slider-arrow next" data-action="custom-slide" data-dir="1" aria-label="Следующая карточка">→</button>
       </div>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:34px">
-        <a class="btn btn-accent" href="#/proizvodstvo-na-zakaz/">Собрать спецификацию</a>
-        <a class="btn btn-ghost" href="#/obrazcy/">Запросить реальные образцы цветов</a>
-      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="section-head"><span class="eyebrow">Цветовые карты</span><h2>Выберите цвет по карте или отправьте образец</h2><p>Более 200 цветов в картах полиэфира, хлопка и полипропилена. Можно ознакомиться с доступными оттенками перед отправкой запроса.</p></div>
+      <div class="section-head"><span class="eyebrow">Цветовые карты</span><h2>Выберите цвет по карте</h2><p>Более 200 цветов в картах полиэфира, хлопка и полипропилена. Можно ознакомиться с доступными оттенками перед отправкой запроса.</p></div>
+      <div class="color-stock-note"><b>Наличие цветов уточняется.</b><span>Цветовые карты показывают возможную палитру, но многих оттенков может не быть в наличии. Выбранный цвет согласовывается после проверки остатков на складе поставщика.</span></div>
       <div class="color-map-slider">
         <button class="color-map-arrow prev" data-action="color-map-slide" data-dir="-1" aria-label="Предыдущая цветовая карта">←</button>
         <div class="color-map-slider-viewport" id="color-map-slider-viewport">
@@ -679,7 +681,7 @@ function pageHome(){
         ${[[`Минимальный заказ — ${SITE.minOrder}`,'Минимальная сумма общего заказа. В один заказ можно включить несколько позиций.'],['100% предоплата','Оплата по счёту после согласования спецификации и коммерческого предложения.'],['География поставки', SITE.geo + '. Доставка до терминала транспортной компании — бесплатно, далее — по тарифам перевозчика.']].map(c => `<div class="card"><h3 style="margin-top:0">${c[0]}</h3><p>${c[1]}</p></div>`).join('')}
       </div>
       <p class="small muted" style="margin-top:16px">Транспортные компании: ${SITE.carriers.join(', ')}.</p>
-      <div style="margin-top:22px"><a class="btn btn-outline" href="#/delivery-payment/">Подробнее о доставке и оплате</a></div>
+      <div style="margin-top:22px"><a class="btn btn-outline" href="${primarySiteUrl('delivery','home_delivery_cta')}">Подробнее о доставке и оплате</a></div>
     </div>
   </section>
 
@@ -696,7 +698,7 @@ function pageHome(){
       <h2 style="font-size:clamp(26px,3vw,38px);font-weight:800;letter-spacing:-.02em;margin-bottom:14px">Получите расчёт партии по вашим параметрам</h2>
       <p style="color:#aeb8b1;margin-bottom:30px">Укажите вид изделия, примерный объём и задачу. Если есть образец, фотография, чертёж или техническое задание — приложите их к заявке.</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-        <a class="btn btn-accent" href="#/raschet-zakaza/">Получить стоимость и срок</a>
+        <a class="btn btn-accent" href="#quiz" data-action="scroll-quiz" data-track="open_quote">Получить стоимость и срок</a>
         <a class="btn btn-ghost" href="tel:${SITE.phoneMainHref}" data-track="click_phone">${SITE.phoneMain}</a>
       </div>
       <p class="small" style="color:#8b968f;margin-top:18px">Или напишите: <a href="mailto:${SITE.email}" style="color:var(--accent)" data-track="click_email">${SITE.email}</a> · <a href="#/raschet-zakaza/" style="color:var(--accent)">подробный технический запрос</a></p>
@@ -828,7 +830,7 @@ function pageProduct(slugFull){
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px">
           <button class="btn btn-accent" data-action="add-quote" data-slug="${p.slugFull}" data-track="product_added_to_quote">Добавить в расчёт</button>
           <a class="btn btn-outline" href="#/obrazcy/" data-track="sample_request">Запросить образец</a>
-          <a class="btn btn-dark" href="#/contacts/">Задать вопрос по изделию</a>
+          <a class="btn btn-dark" href="${primarySiteUrl('contacts','product_question')}">Задать вопрос по изделию</a>
         </div>
         <div class="badge-warn">Стоимость рассчитывается по параметрам партии. Чем точнее вводные — тем точнее расчёт с первого раза.</div>
       </div>
@@ -881,6 +883,7 @@ function pageColors(){
   </div></section>
   <section class="section tight"><div class="container">
     <div class="color-warn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4m0 3v.5"/></svg><div><b>Отображение цвета зависит от экрана.</b> Для окончательного согласования используйте номер цветовой карты и физический образец. Желаемый Pantone можно указать как ориентир или прикрепить образец — точное совпадение не заявляется.</div></div>
+    <div class="color-stock-note"><b>Не все цвета есть в наличии.</b><span>Карты отражают возможную палитру. Многие оттенки могут отсутствовать, поэтому выбранный цвет подтверждается после проверки наличия на складе поставщика.</span></div>
     ${groups.map(group => {
       const maps = HOME_COLOR_MAPS.map((map, index) => ({...map, index})).filter(map => map.title === group);
       return `<section class="color-maps-page-section">
@@ -894,7 +897,7 @@ function pageColors(){
       </section>`;
     }).join('')}
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:42px">
-      <a class="btn btn-accent" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
+      <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Получить расчёт</a>
       <a class="btn btn-outline" href="#/obrazcy/" data-track="sample_request">Запросить физический образец</a>
     </div>
   </div></section>`;
@@ -995,8 +998,8 @@ function renderWizard(){
   } else if (s === 4){
     inner = `<h2>Какой цвет нужен?</h2><p class="muted" style="margin-bottom:24px">Посмотрите все доступные карты, затем укажите цвет или его код.</p><div class="wizard-color-maps color-map-slider"><button type="button" class="color-map-arrow prev" data-action="wizard-color-map-slide" data-dir="-1" aria-label="Предыдущая цветовая карта">←</button><div class="color-map-slider-viewport" id="wizard-color-map-slider-viewport"><div class="color-map-slider-track">${HOME_COLOR_MAPS.map(map=>`<article class="color-map-card"><div class="color-map-image"><img src="${map.src}" alt="${map.title}, ${map.sheet}" loading="lazy"></div><h3>${map.title}</h3><p>${map.sheet}</p></article>`).join('')}</div></div><button type="button" class="color-map-arrow next" data-action="wizard-color-map-slide" data-dir="1" aria-label="Следующая цветовая карта">→</button></div><div class="form-grid quiz-single-field wizard-color-field">${wField('Цвет или код карты','color','textarea',null,false,'Например: тёмно-зелёный или код поставщика')}</div><div class="quiz-checks"><label><input type="checkbox" data-wcolorflag="sample" ${(d.colorFlags||[]).includes('sample')?'checked':''}> Нужен подбор по образцу</label><label><input type="checkbox" data-wcolorflag="unknown" ${(d.colorFlags||[]).includes('unknown')?'checked':''}> Цвет пока не выбран</label></div>`;
   } else if (s === 5){
-    const volumes=['до 500','500–1 000','1 000–5 000','более 5 000'];
-    inner = `<h2>Какой объём планируете заказать?</h2><p class="muted" style="margin-bottom:24px">Если объём пока примерный, укажите ориентир.</p><div class="grid grid-2 quiz-options">${volumes.map(v=>`<button class="card quiz-option ${d.volume===v?'selected':''}" data-wpick="volume" data-val="${v}"><b>${v}</b></button>`).join('')}</div>${wField('Комментарий к объёму','volumeComment','text',null,false,'Можно указать единицы: шт., пары или метры')}`;
+    const volumes=['От 1 000','От 5 000','От 10 000','От 50 000'];
+    inner = `<h2>Какой объём планируете заказать?</h2><p class="muted" style="margin-bottom:10px">Если объём пока примерный, укажите ориентир.</p><p class="muted" style="margin-bottom:24px"><b>Минимальный объём:</b> шнур в метраже — от 1 000 м, шнурки — от 1 000 штук, ручки — от 2 000 пар.</p><div class="grid grid-2 quiz-options">${volumes.map(v=>`<button class="card quiz-option ${d.volume===v?'selected':''}" data-wpick="volume" data-val="${v}"><b>${v}</b></button>`).join('')}</div>${wField('Комментарий к объёму','volumeComment','text',null,false,'Можно указать единицы: шт., пары или метры')}`;
   } else if (s === 6){
     const deadlines=['Как можно скорее','В течение месяца','Позже','Срок пока не определён'];
     inner = `<h2>Когда и куда нужно доставить?</h2><h3>Когда нужен заказ?</h3><div class="grid grid-2 quiz-options">${deadlines.map(v=>`<button class="card quiz-option ${d.deadline===v?'selected':''}" data-wpick="deadline" data-val="${v}"><b>${v}</b></button>`).join('')}</div><div class="form-grid" style="margin-top:22px">${wField('Город и страна доставки','city','text',null,true,'Например: Москва, Россия')}</div>`;
@@ -1089,7 +1092,7 @@ function pageSamples(){
         <div class="field full"><button class="btn btn-accent" type="submit">Отправить запрос на образцы</button></div>
         <div class="form-ok full" style="grid-column:1/-1"></div>
       </form>
-    </div>`);
+    </div>`, true);
 }
 function fField(label, name, type, opts, required, ph){
   if (type === 'select') return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><select name="${name}" ${required ? 'required' : ''}><option value="">— Выберите —</option>${opts.map(o => `<option>${o}</option>`).join('')}</select><span class="err-msg">Заполните поле</span></div>`;
@@ -1134,7 +1137,7 @@ function pageQuality(){
       ${[['Подтверждено', ['Визуальный контроль плетения','Сверка цвета с согласованным образцом / картой','Контроль упаковки и комплектности']],['Требует подтверждения', ['Измерение диаметра / ширины','Проверка длины отрезков','Проверка фиксации наконечника','Сохранение образца-эталона']],['Не заявляется', ['Испытания на прочность, истирание, растяжение','Лабораторные протоколы','Гарантия «0% брака»']]].map(g => `<div class="card"><span class="tag" style="align-self:flex-start">${g[0]}</span><ul style="margin:12px 0 0 18px;font-size:14.5px;color:var(--muted)">${g[1].map(x => `<li style="margin-bottom:6px">${x}</li>`).join('')}</ul></div>`).join('')}
     </div>
     <h3 class="sub">Документы</h3>
-    <p class="muted" style="margin-bottom:20px">Библиотека документов подготовлена в структуре CMS. Сертификаты, декларации и протоколы публикуются только после предоставления реальных файлов. Реквизиты компании — на странице <a href="#/about/" style="text-decoration:underline">«О компании»</a>.</p>
+    <p class="muted" style="margin-bottom:20px">Библиотека документов подготовлена в структуре CMS. Сертификаты, декларации и протоколы публикуются только после предоставления реальных файлов. Реквизиты компании — на странице <a href="${primarySiteUrl('about','quality_about_link')}" style="text-decoration:underline">«О компании»</a>.</p>
     <h3 class="sub">Рекламации</h3>
     <p class="muted">Порядок предъявления претензий согласовывается при оформлении заказа (состав обязательных проверок, сроки, форма претензии). Точная процедура — [НУЖНО УТОЧНИТЬ] и не публикуется до подтверждения.</p>`);
 }
@@ -1344,9 +1347,9 @@ function router(){
   else if (r === 'production') { location.hash = '#/'; return; }
   else if (r === 'quality') html = pageQuality();
   else if (r === 'portfolio') { location.hash = '#/'; return; }
-  else if (r === 'delivery-payment') html = pageDelivery();
-  else if (r === 'about') html = pageAbout();
-  else if (r === 'contacts') html = pageContacts();
+  else if (r === 'delivery-payment') { location.href = primarySiteUrl('delivery','legacy_delivery_page'); return; }
+  else if (r === 'about') { location.href = primarySiteUrl('about','legacy_about_page'); return; }
+  else if (r === 'contacts') { location.href = primarySiteUrl('contacts','legacy_contacts_page'); return; }
   else if (r === 'repeat-order') html = pageRepeat();
   else if (r === 'articles') html = seg[1] ? pageArticle(seg[1]) : pageArticles();
   else if (r === 'privacy') html = pagePrivacy();
@@ -1377,6 +1380,18 @@ document.addEventListener('click', e => {
   const a = el.dataset.action;
   if (a === 'nav-toggle') { e.preventDefault(); $('#mobile-menu').classList.add('open'); }
   else if (a === 'nav-close') { $('#mobile-menu').classList.remove('open'); }
+  else if (a === 'scroll-quiz') {
+    e.preventDefault();
+    const quiz = $('#quiz');
+    if (quiz) quiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else {
+      location.hash = '#/';
+      setTimeout(() => {
+        const homeQuiz = $('#quiz');
+        if (homeQuiz) homeQuiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }
   else if (a === 'faq') {
     const item = el.closest('.faq-item');
     const ans = item.querySelector('.faq-a');

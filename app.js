@@ -78,15 +78,30 @@ const PRODUCTS = [
   }),
 
   /* ШНУРКИ */
-  P('poliefir-kruglye','shnurki','Шнурки для обуви и одежды из полиэфира круглые',{material:'полиэфир',form:'круглый',twist:'однотонное',purpose:'обувь, одежда'}),
-  P('poliefir-ploskie','shnurki','Шнурки для обуви и одежды из полиэфира плоские',{material:'полиэфир',form:'плоский',twist:'однотонное',purpose:'обувь, одежда'}),
+  P('poliefir-kruglye','shnurki','Шнурки для обуви и одежды из полиэфира круглые',{
+    material:'полиэфир',form:'круглый',twist:'однотонное',purpose:'обувь, одежда',
+    description:'Шнурки для обуви и одежды из полиэфира круглые являются одним из наших специализированных продуктов. Их особенностью является прочность и долговечность, а также широкий спектр цветов и длин, что позволяет выбрать оптимальный вариант для любых моделей обуви или одежды.'
+  }),
+  P('poliefir-ploskie','shnurki','Шнурки для обуви и одежды из полиэфира плоские',{
+    material:'полиэфир',form:'плоский',twist:'однотонное',purpose:'обувь, одежда',
+    description:'Шнурки для обуви из полиэфира плоские — это не только надёжная фиксация обуви, но и стильный акцент. Идеально подходят как для повседневной носки, так и для спортивной обуви. Отличаются высоким качеством материалов, долговечностью и стильным дизайном.'
+  }),
   P('poliefir-ploskie-dvuhtsvetnye','shnurki','Шнурки для обуви из полиэфира плоские двухцветные',{
     material:'полиэфир',form:'плоский',twist:'двухцветное',purpose:'обувь',
-    description:'Плоские двухцветные шнурки из полиэфира отличаются высокой прочностью, износостойкостью и удобством использования. Они подходят для различных видов обуви, одежды, сумок и аксессуаров. Продукция соответствует требованиям качества и безопасности.'
+    description:'Шнурки для обуви из полиэфира плоские двухцветные — это не только надёжная фиксация обуви, но и стильный акцент. Идеально подходят как для повседневной носки, так и для спортивной обуви. Отличаются высоким качеством материалов, долговечностью и стильным дизайном.'
   }),
-  P('hlopok-kruglye','shnurki','Шнурки для обуви и одежды из хлопка круглые',{material:'хлопок',form:'круглый',twist:'однотонное',purpose:'обувь, одежда'}),
-  P('hlopok-ploskie','shnurki','Шнурки для обуви и одежды из хлопка плоские',{material:'хлопок',form:'плоский',twist:'однотонное',purpose:'обувь, одежда'}),
-  P('hlopok-voshchenye','shnurki','Шнурки для обуви и одежды из хлопка вощёные',{material:'хлопок',form:'круглый',twist:'вощёное',purpose:'обувь, одежда'}),
+  P('hlopok-kruglye','shnurki','Шнурки для обуви и одежды из хлопка круглые',{
+    material:'хлопок',form:'круглый',twist:'однотонное',purpose:'обувь, одежда',
+    description:'Это практичный и стильный аксессуар, который помогает надёжно зафиксировать обувь или дополнить образ нарядной одежды. Наша продукция изготавливается из высококачественного хлопка, который обеспечивает прочность и долговечность шнурков. Мы предлагаем шнурки различных цветов и длин.'
+  }),
+  P('hlopok-ploskie','shnurki','Шнурки для обуви и одежды из хлопка плоские',{
+    material:'хлопок',form:'плоский',twist:'однотонное',purpose:'обувь, одежда',
+    description:'Шнурки для обуви и одежды из хлопка плоские — это не только надёжная фиксация обуви, но и стильный акцент. Идеально подходят как для повседневной носки, так и для спортивной обуви. Отличаются высоким качеством материалов, долговечностью и стильным дизайном.'
+  }),
+  P('hlopok-voshchenye','shnurki','Шнурки для обуви и одежды из хлопка вощёные',{
+    material:'хлопок',form:'круглый',twist:'вощёное',purpose:'обувь, одежда',
+    description:'Шнурки для обуви и одежды из хлопка вощёные являются одним из наших основных продуктов. Эти шнурки отличаются высокой прочностью, устойчивостью к истиранию и влаге, а также красивым внешним видом. Они идеально подходят для повседневной носки, спортивной обуви и активного отдыха.'
+  }),
 
   /* РУЧКИ */
   P('polipropilen-ploskie','ruchki-dlya-upakovki','Ручки для подарочной упаковки из полипропилена плоские',{
@@ -319,7 +334,12 @@ const PRODUCT_IMAGES = {
   'shnury/hlopok-voshchenyj-kruglyj': './assets/images/product-hlopok-voshchenyj-kruglyj.jpg',
   'shnury/hlopok-voshchenyj-ploskij': './assets/images/product-hlopok-voshchenyj-ploskij.jpg',
   'shnury/metanit-vitoj': './assets/images/product-metanit-vitoj.jpg',
+  'shnurki/poliefir-kruglye': './assets/images/product-shnurki-poliefir-kruglye.jpg',
+  'shnurki/poliefir-ploskie': './assets/images/product-shnurki-poliefir-ploskie.jpg',
   'shnurki/poliefir-ploskie-dvuhtsvetnye': './assets/images/product-shnurki-poliefir-ploskie-dvuhtsvetnye.jpg',
+  'shnurki/hlopok-kruglye': './assets/images/product-shnurki-hlopok-kruglye.jpg',
+  'shnurki/hlopok-ploskie': './assets/images/product-shnurki-hlopok-ploskie.jpg',
+  'shnurki/hlopok-voshchenye': './assets/images/product-shnurki-hlopok-voshchenye.jpg',
   'ruchki-dlya-upakovki/polipropilen-ploskie': './assets/images/product-ruchki-polipropilen-ploskie.jpg',
   'ruchki-dlya-upakovki/polipropilen-vyazanye-plastik': './assets/images/product-ruchki-polipropilen-vyazanye-plastik.jpg',
   'ruchki-dlya-upakovki/polipropilen-metanit-kruglye': './assets/images/product-ruchki-polipropilen-metanit-kruglye.jpg',
@@ -466,7 +486,7 @@ function openProductPopup(slug){
         <h2 id="product-popup-title">${esc(p.name)}</h2>
         <p class="product-popup-description">${esc(description)}</p>
         ${features}
-        <button class="btn btn-accent" data-action="add-quote" data-slug="${p.slugFull}" data-track="product_added_to_quote">Добавить в расчёт</button>
+        <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Рассчитать заказ</a>
       </div>
     </div>
   </div>`;
@@ -814,7 +834,7 @@ function pageProduct(slugFull){
   return `
   <section class="page-head"><div class="container">
     <nav class="crumbs"><a href="#/">Главная</a> / <a href="#/catalog/">Каталог</a> / <a href="#/catalog/${p.cat}/">${cat.name}</a> / <span>${esc(p.name)}</span></nav>
-    <h1>${esc(p.name)}</h1><p>${esc(p.desc)}</p>
+    <h1>${esc(p.name)}</h1><p>${esc(p.description || p.desc || '')}</p>
   </div></section>
   <section class="section tight"><div class="container">
     <div class="two-col" style="grid-template-columns:1fr 1fr">
@@ -827,7 +847,7 @@ function pageProduct(slugFull){
       <div>
         <p style="margin-bottom:20px">${esc(p.purpose)}. Параметры изготовления подбираются под задачу и согласовываются до запуска партии.</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px">
-          <button class="btn btn-accent" data-action="add-quote" data-slug="${p.slugFull}" data-track="product_added_to_quote">Добавить в расчёт</button>
+          <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Рассчитать заказ</a>
           <a class="btn btn-outline" href="#/obrazcy/" data-track="sample_request">Запросить образец</a>
           <a class="btn btn-dark" href="${primarySiteUrl('contacts','product_question')}">Задать вопрос по изделию</a>
         </div>
@@ -1377,6 +1397,7 @@ document.addEventListener('click', e => {
   else if (a === 'nav-close') { $('#mobile-menu').classList.remove('open'); }
   else if (a === 'scroll-quiz') {
     e.preventDefault();
+    if ($('#modal-overlay').classList.contains('open')) closeWizard();
     const quiz = $('#quiz');
     if (quiz) quiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
     else {

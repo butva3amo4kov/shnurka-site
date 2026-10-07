@@ -357,8 +357,8 @@ function renderHeader(){
         <a href="mailto:${SITE.email}" data-track="click_email">${SITE.email}</a>
       </div>
       <div class="topbar-actions">
-        <a class="quote-chip" href="#/raschet-zakaza/" title="Список для расчёта">Список расчёта <span class="cnt">${Quote.count()}</span></a>
-        <a class="btn btn-accent btn-sm" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
+        <a class="quote-chip" href="#/" data-action="scroll-quiz" data-track="open_quote">Рассчитать заказ</a>
+        <a class="btn btn-accent btn-sm" href="#/obrazcy/" data-track="sample_request">Запросить образцы</a>
       </div>
     </div>
   </div>
@@ -544,7 +544,6 @@ function pageHome(){
         <p class="lead">Подберём материал, форму, плетение, размер, цвет, длину и наконечник. Собственное производство в Зеленограде, поставки по России, Казахстану, Беларуси и Армении.</p>
         <div class="hero-cta">
           <a class="btn btn-accent" href="#quiz" data-action="scroll-quiz" data-track="open_quote">Получить расчёт партии</a>
-          <a class="btn btn-ghost" href="#/obrazcy/" data-track="sample_request">Запросить образцы</a>
         </div>
       </div>
       <div class="hero-visual">
@@ -962,7 +961,7 @@ function quoteListHTML(){
 }
 
 /* Мастер конфигуратора (модальное окно) */
-const WIZ_STEPS = ['Продукция','Задача','Материал','Размеры','Цвет','Объём','Доставка','Контакт'];
+const WIZ_STEPS = ['Продукция','Задача','Материал','Размеры','Цвет','Объём','Контакт'];
 function openWizard(mode, prefill){
   wizard = { step: 0, mode: mode || 'known', data: Object.assign({ items: [], files: [], wphone: '', wemail: '' }, prefill || {}) };
   $('#modal-overlay').classList.remove('product-open', 'color-map-open');
@@ -1000,11 +999,8 @@ function renderWizard(){
   } else if (s === 5){
     const volumes=['От 1 000','От 5 000','От 10 000','От 50 000'];
     inner = `<h2>Какой объём планируете заказать?</h2><p class="muted" style="margin-bottom:10px">Если объём пока примерный, укажите ориентир.</p><p class="muted" style="margin-bottom:24px"><b>Минимальный объём:</b> шнур в метраже — от 1 000 м, шнурки — от 1 000 штук, ручки — от 2 000 пар.</p><div class="grid grid-2 quiz-options">${volumes.map(v=>`<button class="card quiz-option ${d.volume===v?'selected':''}" data-wpick="volume" data-val="${v}"><b>${v}</b></button>`).join('')}</div>${wField('Комментарий к объёму','volumeComment','text',null,false,'Можно указать единицы: шт., пары или метры')}`;
-  } else if (s === 6){
-    const deadlines=['Как можно скорее','В течение месяца','Позже','Срок пока не определён'];
-    inner = `<h2>Когда и куда нужно доставить?</h2><h3>Когда нужен заказ?</h3><div class="grid grid-2 quiz-options">${deadlines.map(v=>`<button class="card quiz-option ${d.deadline===v?'selected':''}" data-wpick="deadline" data-val="${v}"><b>${v}</b></button>`).join('')}</div><div class="form-grid" style="margin-top:22px">${wField('Город и страна доставки','city','text',null,true,'Например: Москва, Россия')}</div>`;
   } else {
-    inner = `<h2>Контакт для расчёта</h2><div class="form-grid">${wField('Имя','person','text',null,true,'Как к вам обращаться')}${wField('Компания','company','text',null,false,'необязательно')}${wField('Телефон','wphone','tel',null,true,'+7 (___) ___-__-__')}${wField('Email или удобный способ связи','contactWay','text',null,true,'Почта, Telegram или MAX')}${wField('Комментарий','wcomment','textarea',null,false,'Дополнительная информация')}</div><label class="consent"><input type="checkbox" id="w-consent" data-wreq-consent><span>Согласен на обработку персональных данных и принимаю <a href="#/privacy/" style="text-decoration:underline">политику конфиденциальности</a> <span class="req">*</span></span></label><span class="err-msg" id="w-consent-err" style="display:none;color:var(--err);font-size:12.5px">Поставьте галочку согласия</span>`;
+    inner = `<h2>Контакт для расчёта</h2><div class="form-grid">${wField('Имя','person','text',null,true,'Как к вам обращаться')}${wField('Компания','company','text',null,false,'необязательно')}${wField('Телефон','wphone','tel',null,true,'+7 (___) ___-__-__')}${wField('Email или удобный способ связи','contactWay','text',null,true,'Почта, Telegram или MAX')}${wField('Страна и город доставки','city','text',null,true,'Например: Россия, Москва')}${wField('Комментарий','wcomment','textarea',null,false,'Дополнительная информация')}</div><label class="consent"><input type="checkbox" id="w-consent" data-wreq-consent><span>Согласен на обработку персональных данных и принимаю <a href="#/privacy/" style="text-decoration:underline">политику конфиденциальности</a> <span class="req">*</span></span></label><span class="err-msg" id="w-consent-err" style="display:none;color:var(--err);font-size:12.5px">Поставьте галочку согласия</span>`;
   }
   const stepper = `<div class="wizard-steps">${WIZ_STEPS.map((t, i) => `<span class="${i === s ? 'on' : ''}">${i + 1}. ${t}</span>`).join('')}</div>`;
   const nav = `<div class="wizard-nav">
@@ -1039,8 +1035,7 @@ function wizardValidate(){
   });
   if (wizard.step === 2 && !(d.materials || []).length) { toast('Выберите материал или вариант «не знаю»'); ok = false; }
   if (wizard.step === 5 && !d.volume) { toast('Выберите примерный объём'); ok = false; }
-  if (wizard.step === 6 && !d.deadline) { toast('Выберите желаемый срок'); ok = false; }
-  if (wizard.step === 7) {
+  if (wizard.step === 6) {
     const c = $('#w-consent');
     if (!c || !c.checked) { $('#w-consent-err').style.display = 'block'; ok = false; } else $('#w-consent-err').style.display = 'none';
   }

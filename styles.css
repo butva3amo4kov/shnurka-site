@@ -73,6 +73,9 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .mobile-menu.open{display:block}
 .mobile-menu a{display:block;color:#e6ece8;padding:13px 0;font-size:18px;border-bottom:1px solid rgba(255,255,255,.08)}
 .mobile-menu .mm-sub a{font-size:15px;padding:8px 0 8px 18px;color:#aeb8b1;border-bottom:none}
+.mobile-menu-contacts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px}
+.mobile-menu .mobile-menu-contacts a{display:inline-block;padding:0;border:0;font-size:13px;color:#aeb8b1;text-decoration:underline;text-underline-offset:3px}
+.mobile-menu .mobile-menu-contacts a:hover{color:var(--accent)}
 .mm-close{position:absolute;top:16px;right:16px}
 
 /* ---------- Hero ---------- */
@@ -537,6 +540,8 @@ body{overflow-x:hidden;background:#fcfdfb}
 }
 @media (max-width:640px){
   .topbar{display:none}
+  body{padding-top:68px}
+  .site-header{position:fixed;top:0;left:0;right:0;width:100%}
   .container{padding-left:20px;padding-right:20px}
   .topbar .container{gap:10px 14px;font-size:12px}
   .topbar .tb-sep,.topbar a[href^="mailto"]{display:none}

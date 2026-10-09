@@ -416,6 +416,10 @@ function renderHeader(){
     <a href="#/articles/">Статьи</a>
     <a href="${primarySiteUrl('about','mobile_menu_about')}">О компании</a>
     <a href="${primarySiteUrl('contacts','mobile_menu_contacts')}">Контакты</a>
+    <div class="mobile-menu-contacts">
+      <a href="mailto:${SITE.email}" data-track="click_email">${SITE.email}</a>
+      <a href="tel:${SITE.phoneMainHref}" data-track="click_phone">${SITE.phoneMain}</a>
+    </div>
     <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
       <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Получить расчёт партии</a>
       <a class="btn btn-ghost" href="#/obrazcy/" data-track="sample_request">Запросить образцы</a>

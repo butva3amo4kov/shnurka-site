@@ -17,6 +17,14 @@ const SITE = {
   payment: '100% предоплата после согласования спецификации и коммерческого предложения'
 };
 const NEED = 'Уточняется после проверки параметров заказа';
+const FORM_ENDPOINT = 'https://formsubmit.co/ajax/info@shnurka.ru';
+const FORM_NAMES = {
+  quote: 'Квиз — расчёт заказа',
+  'quick-quote': 'Быстрая заявка',
+  samples: 'Запрос образцов',
+  contact: 'Сообщение с сайта',
+  repeat: 'Повтор заказа'
+};
 
 const CATS = [
   {slug:'shnurki', name:'Шнурки', short:'Для обуви, одежды и аксессуаров', purpose:'Обувное производство, одежда, спортивные и специальные изделия'},
@@ -404,16 +412,13 @@ function renderHeader(){
     <div style="height:56px"></div>
     <a href="#/catalog/">Каталог</a>
     <a href="#/cvetovye-karty/">Цветовые карты</a>
-    <a href="#/proizvodstvo-na-zakaz/">Индивидуальное изготовление</a>
-    <a href="#/quality/">Качество и документы</a>
-    <a href="#/obrazcy/">Запросить образцы</a>
     <a href="${primarySiteUrl('delivery','mobile_menu_delivery')}">Доставка и оплата</a>
     <a href="#/articles/">Статьи</a>
     <a href="${primarySiteUrl('about','mobile_menu_about')}">О компании</a>
     <a href="${primarySiteUrl('contacts','mobile_menu_contacts')}">Контакты</a>
     <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
-      <a class="btn btn-accent" href="#/raschet-zakaza/">Получить расчёт партии</a>
-      <a class="btn btn-ghost" href="tel:${SITE.phoneMainHref}">${SITE.phoneMain}</a>
+      <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Получить расчёт партии</a>
+      <a class="btn btn-ghost" href="#/obrazcy/" data-track="sample_request">Запросить образцы</a>
     </div>
   </div>`;
 }
@@ -546,7 +551,7 @@ function quoteMiniForm(prefill){
     <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off">
     <div class="field full" style="flex-direction:row;gap:14px;align-items:center;flex-wrap:wrap">
       <button class="btn btn-accent" type="submit" data-track="quote_step_started">Отправить</button>
-      <span class="muted small">Нет готового ТЗ? Прикрепите фотографию, эскиз или пример изделия в <a href="#/raschet-zakaza/" style="text-decoration:underline">подробной форме</a> — поможем сформировать спецификацию.</span>
+      <span class="muted small">Нет готового ТЗ? Укажите основные параметры в <a href="#/" data-action="scroll-quiz" style="text-decoration:underline">квизе</a> — поможем сформировать спецификацию.</span>
     </div>
     <div class="form-ok full" style="grid-column:1/-1"></div>
   </form>`;
@@ -720,7 +725,7 @@ function pageHome(){
         <a class="btn btn-accent" href="#quiz" data-action="scroll-quiz" data-track="open_quote">Получить стоимость и срок</a>
         <a class="btn btn-ghost" href="tel:${SITE.phoneMainHref}" data-track="click_phone">${SITE.phoneMain}</a>
       </div>
-      <p class="small" style="color:#8b968f;margin-top:18px">Или напишите: <a href="mailto:${SITE.email}" style="color:var(--accent)" data-track="click_email">${SITE.email}</a> · <a href="#/raschet-zakaza/" style="color:var(--accent)">подробный технический запрос</a></p>
+      <p class="small" style="color:#8b968f;margin-top:18px">Или напишите: <a href="mailto:${SITE.email}" style="color:var(--accent)" data-track="click_email">${SITE.email}</a> · <a href="#/" data-action="scroll-quiz" style="color:var(--accent)">рассчитать заказ</a></p>
     </div>
   </section>`;
 }
@@ -809,7 +814,7 @@ function applyCatalogFilters(){
   catalogState.mats.forEach(m => af.push(['материал: ' + m, 'mats:' + m]));
   $('#active-filters').innerHTML = af.map(a => `<span class="af">${esc(a[0])}${a[1] ? `<button data-action="remove-filter" data-key="${a[1]}" aria-label="Убрать фильтр">×</button>` : ''}</span>`).join('');
   el.innerHTML = list.length ? list.map(p => productCard(p)).join('') :
-    `<div class="empty-state" style="grid-column:1/-1"><h3 style="margin-bottom:8px">Ничего не найдено</h3><p>Попробуйте изменить фильтры или <a href="#/raschet-zakaza/" style="text-decoration:underline">отправить запрос</a> — изготовим по индивидуальным параметрам.</p></div>`;
+    `<div class="empty-state" style="grid-column:1/-1"><h3 style="margin-bottom:8px">Ничего не найдено</h3><p>Попробуйте изменить фильтры или <a href="#/" data-action="scroll-quiz" style="text-decoration:underline">рассчитать заказ</a> — изготовим по индивидуальным параметрам.</p></div>`;
 }
 
 /* ============ КАРТОЧКА ПРОДУКТА ============ */
@@ -887,7 +892,7 @@ function pageProduct(slugFull){
 
     <div class="card" style="margin-top:40px;background:var(--bg);border:none;color:#fff;flex-direction:row;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
       <div><h3 style="margin-top:0;color:#fff">Нужен расчёт по «${esc(p.name)}»?</h3><p style="flex-grow:0">Укажите параметры партии — ответим со стоимостью и сроком.</p></div>
-      <a class="btn btn-accent" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
+      <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Получить расчёт</a>
     </div>
   </div></section>`;
 }
@@ -901,7 +906,6 @@ function pageColors(){
     <h1>Цветовые карты</h1><p>Более ${SITE.colorsCount.replace('+','')} цветов для изделий из полиэфира, хлопка и полипропилена.</p>
   </div></section>
   <section class="section tight"><div class="container">
-    <div class="color-warn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4m0 3v.5"/></svg><div><b>Отображение цвета зависит от экрана.</b> Для окончательного согласования используйте номер цветовой карты и физический образец. Желаемый Pantone можно указать как ориентир или прикрепить образец — точное совпадение не заявляется.</div></div>
     <div class="color-stock-note"><b>Не все цвета есть в наличии.</b><span>Карты отражают возможную палитру. Многие оттенки могут отсутствовать, поэтому выбранный цвет подтверждается после проверки наличия на складе поставщика.</span></div>
     ${groups.map(group => {
       const maps = HOME_COLOR_MAPS.map((map, index) => ({...map, index})).filter(map => map.title === group);
@@ -1061,7 +1065,31 @@ function wizardValidate(){
   }
   return ok;
 }
-function submitWizard(){
+async function sendFormToEmail(type, formData, ref){
+  const fd = formData instanceof FormData ? formData : new FormData();
+  fd.delete('website');
+  fd.delete('consent');
+  fd.set('_subject', `[Шнурка.ру] ${FORM_NAMES[type] || type} — ${ref}`);
+  fd.set('_template', 'table');
+  fd.set('_captcha', 'false');
+  const replyTo = fd.get('email');
+  if (replyTo && typeof replyTo === 'string') fd.set('_replyto', replyTo);
+  fd.set('Номер обращения', ref);
+  fd.set('Тип заявки', FORM_NAMES[type] || type);
+  fd.set('Страница отправки', location.href);
+  const utm = sessionStorage.getItem('shnurka_utm');
+  if (utm) fd.set('UTM-метки', utm);
+  const response = await fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+    body: fd
+  });
+  let result = null;
+  try { result = await response.json(); } catch(e){}
+  if (!response.ok || (result && result.success === false)) throw new Error('Не удалось отправить заявку');
+  return result;
+}
+async function submitWizard(){
   const d = wizard.data;
   const ref = 'SH-' + String(Date.now()).slice(-6);
   const card = {
@@ -1073,6 +1101,29 @@ function submitWizard(){
     contact: [d.person, d.company, d.wphone, d.contactWay].filter(Boolean).join(', ')
   };
   const sub = { ref, type: 'quote', data: d, card, colors: ColorSel.all(), quoteList: Quote.all(), ts: new Date().toISOString(), page: location.hash };
+  const submitBtn = $('#modal-overlay [data-action="w-submit"]');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Отправляем…'; }
+  const fd = new FormData();
+  Object.entries({
+    'Продукция': card.category,
+    'Задача': card.application,
+    'Материал': card.material,
+    'Размеры': card.size,
+    'Цвет': card.color,
+    'Объём': card.circulation,
+    'Страна и город доставки': card.deliveryCity,
+    'Комментарий': card.commentOrFile,
+    'Контактные данные': card.contact,
+    'Выбранные цвета': JSON.stringify(ColorSel.all()),
+    'Список товаров': JSON.stringify(Quote.all())
+  }).forEach(([key, value]) => { if (value) fd.append(key, value); });
+  try {
+    await sendFormToEmail('quote', fd, ref);
+  } catch(err) {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Получить расчёт'; }
+    toast('Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.');
+    return;
+  }
   try { const all = JSON.parse(localStorage.getItem('shnurka_submissions') || '[]'); all.push(sub); localStorage.setItem('shnurka_submissions', JSON.stringify(all)); } catch(e){}
   sessionStorage.setItem('shnurka_last_ref', ref);
   Quote.clear(); ColorSel.clear();
@@ -1295,7 +1346,7 @@ function pageArticle(slug){
       ${faqHTML(a.faq)}
       <div class="card" style="margin-top:30px;background:var(--bg);border:none;color:#fff;flex-direction:row;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
         <h3 style="margin:0;color:#fff">Нужна помощь с выбором?</h3>
-        <a class="btn btn-accent" href="#/raschet-zakaza/" data-track="open_quote">Получить расчёт</a>
+        <a class="btn btn-accent" href="#/" data-action="scroll-quiz" data-track="open_quote">Получить расчёт</a>
       </div>
     </article>`);
 }
@@ -1306,7 +1357,6 @@ function pageThankYou(){
     <h1 style="font-size:32px;letter-spacing:-.02em;margin-bottom:12px">Заявка принята</h1>
     <p class="muted" style="margin-bottom:8px">Номер обращения: <b class="mono">${esc(ref)}</b></p>
     <p class="muted" style="margin-bottom:26px">Сохраните номер для связи. Специалист свяжется с вами для уточнения параметров. Срочные вопросы — по телефону <a href="tel:${SITE.phoneMainHref}" style="text-decoration:underline">${SITE.phoneMain}</a>.</p>
-    <div class="badge-warn" style="text-align:left;margin-bottom:26px"><b>Демо-режим прототипа:</b> заявка сохранена локально в вашем браузере (localStorage) и не отправлена на сервер. В боевой версии здесь работает интеграция с почтой / CRM webhook.</div>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-outline" onclick="window.print()">Сохранить / распечатать спецификацию</button>
       <a class="btn btn-dark" href="#/catalog/">Вернуться в каталог</a>
@@ -1355,7 +1405,11 @@ function router(){
   }
   else if (r === 'product' && seg[1]) html = pageProduct(seg.slice(1).join('/'));
   else if (r === 'solutions') { location.hash = '#/'; return; }
-  else if (r === 'raschet-zakaza') { html = pageQuote(); }
+  else if (r === 'raschet-zakaza') {
+    location.hash = '#/';
+    setTimeout(() => { const quiz = $('#quiz'); if (quiz) quiz.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+    return;
+  }
   else if (r === 'obrazcy') html = pageSamples();
   else if (r === 'cvetovye-karty') html = pageColors();
   else if (r === 'proizvodstvo-na-zakaz') html = pageCustom();
@@ -1544,7 +1598,7 @@ function validateForm(form){
   });
   return ok;
 }
-document.addEventListener('submit', e => {
+document.addEventListener('submit', async e => {
   const form = e.target.closest('form[data-form]');
   if (!form) return;
   e.preventDefault();
@@ -1562,12 +1616,19 @@ document.addEventListener('submit', e => {
   const data = {};
   fd.forEach((v, k) => { if (k !== 'website' && k !== 'consent') data[k] = v; });
   const ref = 'SH-' + String(Date.now()).slice(-6);
+  try {
+    await sendFormToEmail(form.dataset.form, fd, ref);
+  } catch(err) {
+    if (btn) btn.disabled = false;
+    toast('Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.');
+    return;
+  }
   try { const all = JSON.parse(localStorage.getItem('shnurka_submissions') || '[]'); all.push({ ref, type: form.dataset.form, data, ts: new Date().toISOString(), page: location.hash, utm: JSON.parse(sessionStorage.getItem('shnurka_utm') || '{}') }); localStorage.setItem('shnurka_submissions', JSON.stringify(all)); } catch(err){}
   sessionStorage.setItem('shnurka_last_ref', ref);
   if (form.dataset.trackOk) track(form.dataset.trackOk, { ref });
   track('quote_submitted', { ref, form: form.dataset.form });
   const okBox = form.querySelector('.form-ok');
-  if (okBox) { okBox.innerHTML = '<b>Заявка сохранена.</b> Номер обращения: <b class="mono">' + ref + '</b>. Демо-режим: данные не уходят на сервер. Сейчас вы будете переведены на страницу подтверждения.'; okBox.classList.add('show'); }
+  if (okBox) { okBox.innerHTML = '<b>Заявка отправлена.</b> Номер обращения: <b class="mono">' + ref + '</b>. Сейчас вы будете переведены на страницу подтверждения.'; okBox.classList.add('show'); }
   setTimeout(() => { location.hash = '#/thank-you/'; }, 1400);
 });
 

@@ -268,6 +268,18 @@ const ARTICLES = [
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PHONE_RE = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+function formatPhone(value){
+  let digits = String(value || '').replace(/\D/g, '');
+  if (digits.startsWith('7') || digits.startsWith('8')) digits = digits.slice(1);
+  digits = digits.slice(0, 10);
+  if (!digits) return '';
+  let result = '+7 (' + digits.slice(0, 3);
+  if (digits.length >= 3) result += ') ' + digits.slice(3, 6);
+  if (digits.length >= 6) result += '-' + digits.slice(6, 8);
+  if (digits.length >= 8) result += '-' + digits.slice(8, 10);
+  return result;
+}
 const PRIMARY_SITE_PAGES = {
   about: 'https://shnurka.ru/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8.html',
   delivery: 'https://shnurka.ru/%D0%B4%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0-%D0%B8-%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0.html',
@@ -540,7 +552,7 @@ function quoteMiniForm(prefill){
     </div>
     <div class="field">
       <label for="qq-phone">Телефон <span class="req">*</span></label>
-      <input id="qq-phone" name="phone" type="tel" placeholder="+7 (___) ___-__-__" required>
+      <input id="qq-phone" name="phone" type="tel" placeholder="+7 (000) 000-00-00" inputmode="tel" autocomplete="tel" maxlength="18" required>
       <span class="err-msg">Укажите телефон</span>
     </div>
     <div class="field">
@@ -1003,7 +1015,7 @@ function wField(label, name, type, opts, required, ph){
   const val = wizard.data[name] || '';
   if (type === 'select') return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><select name="${name}" ${required ? 'data-wreq' : ''}><option value="">— Выберите —</option>${opts.map(o => `<option ${val === o[0] ? 'selected' : ''} value="${esc(o[0])}">${esc(o[1])}</option>`).join('')}</select><span class="err-msg">Заполните поле</span></div>`;
   if (type === 'textarea') return `<div class="field full"><label>${label}</label><textarea name="${name}" rows="3" placeholder="${ph || ''}">${esc(val)}</textarea></div>`;
-  return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><input name="${name}" type="${type}" value="${esc(val)}" placeholder="${ph || ''}" ${required ? 'data-wreq' : ''}><span class="err-msg">Заполните поле</span></div>`;
+  return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><input name="${name}" type="${type}" value="${esc(val)}" placeholder="${type === 'tel' ? '+7 (000) 000-00-00' : (ph || '')}" ${type === 'tel' ? 'inputmode="tel" autocomplete="tel" maxlength="18"' : ''} ${required ? 'data-wreq' : ''}><span class="err-msg">${type === 'tel' ? 'Введите телефон полностью' : 'Заполните поле'}</span></div>`;
 }
 function renderWizard(){
   const d = wizard.data, s = wizard.step;
@@ -1057,7 +1069,7 @@ function wizardValidate(){
   const d = wizard.data;
   $$('#modal-overlay [data-wreq]').forEach(el => {
     const f = el.closest('.field');
-    const bad = !el.value.trim();
+    const bad = !el.value.trim() || (el.type === 'tel' && !PHONE_RE.test(el.value.trim()));
     if (f) f.classList.toggle('invalid', bad);
     if (bad) ok = false;
   });
@@ -1151,9 +1163,8 @@ function pageSamples(){
         ${fField('Цвет / код карты', 'color', 'text', null, false)}
         ${fField('Назначение', 'purpose', 'text', null, false)}
         ${fField('Количество образцов', 'sampleQty', 'text', null, false, 'например, 3–5')}
-        ${fField('Компания', 'company', 'text', null, true)}
         ${fField('Имя', 'person', 'text', null, true)}
-        ${fField('Телефон', 'phone', 'tel', null, false, '+7 (___) ___-__-__')}
+        ${fField('Телефон', 'phone', 'tel', null, true, '+7 (___) ___-__-__')}
         ${fField('Email', 'email', 'email', null, false)}
         ${fField('Город и адрес', 'addr', 'text', null, true)}
         ${fField('Комментарий', 'comment', 'textarea', null, false)}
@@ -1167,7 +1178,7 @@ function pageSamples(){
 function fField(label, name, type, opts, required, ph){
   if (type === 'select') return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><select name="${name}" ${required ? 'required' : ''}><option value="">— Выберите —</option>${opts.map(o => `<option>${o}</option>`).join('')}</select><span class="err-msg">Заполните поле</span></div>`;
   if (type === 'textarea') return `<div class="field full"><label>${label}</label><textarea name="${name}" rows="3" placeholder="${ph || ''}"></textarea></div>`;
-  return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><input name="${name}" type="${type}" placeholder="${ph || ''}" ${required ? 'required' : ''}><span class="err-msg">${type === 'email' ? 'Проверьте формат email' : 'Заполните поле'}</span></div>`;
+  return `<div class="field"><label>${label}${required ? ' <span class="req">*</span>' : ''}</label><input name="${name}" type="${type}" placeholder="${type === 'tel' ? '+7 (000) 000-00-00' : (ph || '')}" ${type === 'tel' ? 'inputmode="tel" autocomplete="tel" maxlength="18"' : ''} ${required ? 'required' : ''}><span class="err-msg">${type === 'email' ? 'Проверьте формат email' : type === 'tel' ? 'Введите телефон полностью' : 'Заполните поле'}</span></div>`;
 }
 function consentBlock(id){
   return `<div class="field full consent"><input type="checkbox" name="consent" id="${id}-consent" required><label for="${id}-consent">Согласен на обработку персональных данных в соответствии с <a href="#/personal-data-consent/" style="text-decoration:underline">согласием</a> <span class="req">*</span></label></div><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off">`;
@@ -1361,10 +1372,6 @@ function pageThankYou(){
     <h1 style="font-size:32px;letter-spacing:-.02em;margin-bottom:12px">Заявка принята</h1>
     <p class="muted" style="margin-bottom:8px">Номер обращения: <b class="mono">${esc(ref)}</b></p>
     <p class="muted" style="margin-bottom:26px">Сохраните номер для связи. Специалист свяжется с вами для уточнения параметров. Срочные вопросы — по телефону <a href="tel:${SITE.phoneMainHref}" style="text-decoration:underline">${SITE.phoneMain}</a>.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <button class="btn btn-outline" onclick="window.print()">Сохранить / распечатать спецификацию</button>
-      <a class="btn btn-dark" href="#/catalog/">Вернуться в каталог</a>
-    </div>
   </div></section>`;
 }
 function page404(){
@@ -1572,6 +1579,7 @@ document.addEventListener('change', e => {
   }
 });
 document.addEventListener('input', e => {
+  if (e.target.matches('input[type="tel"]')) e.target.value = formatPhone(e.target.value);
   if (e.target.id === 'f-search') { catalogState.q = e.target.value.trim(); applyCatalogFilters(); }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#modal-overlay').classList.contains('open')) closeWizard(); });
@@ -1590,11 +1598,12 @@ function initHome(){
 /* ============ ОБРАБОТКА ФОРМ ============ */
 function validateForm(form){
   let ok = true;
-  $$('[required]', form).forEach(el => {
+  $$('[required], input[type="tel"]', form).forEach(el => {
     const wrap = el.closest('.field') || el.closest('.consent');
     let bad = false;
     if (el.type === 'checkbox') bad = !el.checked;
     else if (el.type === 'email') bad = el.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+    else if (el.type === 'tel') bad = el.value.trim() ? !PHONE_RE.test(el.value.trim()) : el.required;
     else bad = !el.value.trim();
     if (el.type === 'email' && !el.value.trim() && !el.required) bad = false;
     if (wrap && wrap.classList) wrap.classList.toggle('invalid', bad);
